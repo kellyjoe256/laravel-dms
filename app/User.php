@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Library\Hash;
 
 class User extends Authenticatable
 {
@@ -45,5 +46,13 @@ class User extends Authenticatable
     public function documents()
     {
         return $this->hasMany('App\Document', 'user_id');
+    }
+
+    public function checkCredentials($password)
+    {
+        $generated_password = Hash::make($password, $this->salt);
+        // Check if generated password equals the stored password
+        // and user is allowed to login
+        return ($this->passwd == $generated_password) && $this->active;
     }
 }

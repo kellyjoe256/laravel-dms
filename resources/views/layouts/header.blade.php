@@ -22,15 +22,15 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="{{ asset('assets/img/avatar5.png') }}" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Administrator</span>
+                                <span class="hidden-xs">{{ ucfirst(Auth::user()->username) }}</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="{{ asset('assets/img/avatar5.png') }}" class="img-circle" alt="User Image">
                                     <p>
-                                        Administrator
-                                        <small>Member since Nov. 2018</small>
+                                        {{ ucfirst(Auth::user()->username) }}
+                                        <small>Member since {{ ucfirst(Auth::user()->created_at->format('M. Y')) }}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -39,7 +39,7 @@
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/logout" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="{{ route('logout', [], false) }}" class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>
                             </ul>

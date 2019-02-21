@@ -8,6 +8,6 @@ class TestController extends Controller
 {
     public function index()
     {
-        return view('index', ['title' => 'Dashboard']);
+        return '<h1>Hello, World!</h1>';
     }
 }
