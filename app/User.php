@@ -9,13 +9,18 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    // Table name
+    protected $table = 'user';
+    // Primary Key
+    protected $primaryKey = 'user_id';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username', 'email', 'passwd',
     ];
 
     /**
@@ -24,6 +29,21 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'passwd', 'remember_token',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo('App\Branch', 'branch_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo('App\Department', 'department_id');
+    }
+
+    public function documents()
+    {
+        return $this->hasMany('App\Document', 'user_id');
+    }
 }
