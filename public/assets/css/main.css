@@ -1,0 +1,83 @@
+body {
+    font-family: 'Source Sans Pro', Roboto, sans-serif;
+    font-size: 16px;
+}
+
+strong, label {
+    font-weight: 600;
+}
+
+.help-block {
+    margin-top: 0;
+    font-size: 13px;
+}
+
+.form-control {
+    font-size: 16px;
+}
+
+.table > thead > tr > th, 
+.table > tbody > tr > th, 
+.table > tfoot > tr > th, 
+.table > thead > tr > td, 
+.table > tbody > tr > td, 
+.table > tfoot > tr > td {
+    border-top: 1px solid #ddd;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th {
+    font-weight: 600;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 2 px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-info {
+    color: #4587a9;
+    background-color: #e9f7fe;
+    border-color: #d9e2e4;
+}
+
+.alert-warning {
+    color: #8f872e;
+    background-color: #fbfadd;
+    border-color: #e0d9ce;
+}
+
+.alert-dismissable .close,
+.alert-dismissible .close {
+    top: 0;
+    right: 0;
+}
+
+.alert li {
+    padding: 3px 0;
+    font-size: 14px;
+}
+
+.login-box,
+.register-box {
+    width: 390px;
+}
+
+.box-footer {
+    margin-top: 10px;
+}
