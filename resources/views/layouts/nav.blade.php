@@ -78,12 +78,12 @@
                 </a>
                 <ul class="treeview-menu">
                     <li {!! set_active('branches', 'edit,delete,view_departments,add_departments') !!}>
-                        <a href="/branches">
+                        <a href="{{ route('branches', [], false) }}">
                             <i class="fa fa-circle-o"></i> Manage Branches
                         </a>
                     </li>
                     <li {!! set_active('branches/add') !!}>
-                        <a href="/branches/add">
+                        <a href="{{ route('branches.add', [], false) }}">
                             <i class="fa fa-circle-o"></i> Add Branch
                         </a>
                     </li>
@@ -101,12 +101,12 @@
                 </a>
                 <ul class="treeview-menu">
                     <li {!! set_active('departments', 'edit,delete,view_branches,add_branches') !!}>
-                        <a href="/departments">
+                        <a href="{{ route('departments', [], false) }}">
                             <i class="fa fa-circle-o"></i> Manage Departments
                         </a>
                     </li>
                     <li {!! set_active('departments/add') !!}>
-                        <a href="/departments/add">
+                        <a href="{{ route('departments.add', [], false) }}">
                             <i class="fa fa-circle-o"></i> Add Department
                         </a>
                     </li>

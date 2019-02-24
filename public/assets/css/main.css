@@ -81,3 +81,7 @@ strong, label {
 .box-footer {
     margin-top: 10px;
 }
+
+.u {
+    text-decoration: underline;
+}
