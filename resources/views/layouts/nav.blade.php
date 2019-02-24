@@ -123,13 +123,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li {!! set_active('users', 'edit,change_password') !!}>
-                        <a href="/users">
+                    <li {!! set_active('users', 'edit,delete,change_password') !!}>
+                        <a href="{{ route('users', [], false) }}">
                             <i class="fa fa-circle-o"></i> Manage Users
                         </a>
                     </li>
                     <li {!! set_active('users/add') !!}>
-                        <a href="/users/add">
+                        <a href="{{ route('users.add', [], false) }}">
                             <i class="fa fa-circle-o"></i> Add User
                         </a>
                     </li>

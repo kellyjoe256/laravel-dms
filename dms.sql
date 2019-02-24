@@ -31,7 +31,7 @@ CREATE TABLE `branch_department` (
 
 CREATE TABLE `user` (
     `user_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `username` VARCHAR(120) NOT NULL,
+    `username` VARCHAR(30) NOT NULL,
     `email` VARCHAR(50) NOT NULL,
     `salt` VARCHAR(33) NOT NULL,
     `passwd` VARCHAR(65) NOT NULL,

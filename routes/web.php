@@ -44,6 +44,9 @@ Route::group(['middleware' => ['auth', 'timeout']], function () {
     ])->middleware('admin');
     Route::post('/branches/{id}/add_departments', 'BranchesController@storeDepartments')
         ->middleware('admin');
+    Route::get('/branches/{id}/get_departments', [
+        'as' => 'branches.get_departments', 'uses' => 'BranchesController@getDepartments',
+    ])->middleware('admin');
     
     // Departments
     Route::get('/departments', [
@@ -72,4 +75,35 @@ Route::group(['middleware' => ['auth', 'timeout']], function () {
     ])->middleware('admin');
     Route::post('/branches/{id}/add_branches', 'DepartmentsController@storeBranches')
         ->middleware('admin');
+    
+    // Users
+    Route::get('/users', [
+        'as' => 'users', 'uses' => 'UsersController@index',
+    ])->middleware('admin');
+    Route::get('/users/add', [
+        'as' => 'users.add', 'uses' => 'UsersController@create',
+    ])->middleware('admin');
+    Route::post('/users/add', 'UsersController@store')
+        ->middleware('admin');
+    Route::get('/users/{id}/edit', [
+        'as' => 'users.edit', 'uses' => 'UsersController@edit',
+    ])->middleware('admin');
+    Route::post('/users/{id}/edit', 'UsersController@update')
+        ->middleware('admin');
+    Route::get('/users/{id}/delete', [
+        'as' => 'users.delete', 'uses' => 'UsersController@delete',
+    ])->middleware('admin');
+    Route::post('/users/{id}/delete', 'UsersController@destroy')
+        ->middleware('admin');
+    Route::get('/users/{id}/change_password', [
+        'as' => 'users.change_password', 'uses' => 'UsersController@changePassword',
+    ])->middleware('admin');
+    Route::post('/users/{id}/change_password', 'UsersController@storePassword')
+        ->middleware('admin');
+    Route::get('/users/{id}/activate', [
+        'as' => 'users.activate', 'uses' => 'UsersController@activate',
+    ])->middleware('admin');
+    Route::get('/users/{id}/deactivate', [
+        'as' => 'users.deactivate', 'uses' => 'UsersController@deactivate',
+    ])->middleware('admin');
 });

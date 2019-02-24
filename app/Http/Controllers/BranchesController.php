@@ -163,4 +163,28 @@ class BranchesController extends Controller
             'message' => 'Branch Departments added successfully',
         ]);
     }
+
+    public function getDepartments($branch_id=0)
+    {
+        $departments = [];
+
+        $branch = Branch::find((int)$branch_id);
+        if ($branch) {
+            $data = $branch->departments
+                ->pluck('department_name', 'department_id')
+                ->toArray();
+            asort($data);
+
+            foreach ($data as $key => $value) {
+                array_push($departments, [
+                    'id' => (int)$key,
+                    'department' => $value,
+                ]);
+            }
+        }
+
+        return response(json_encode($departments), 200, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
 }
