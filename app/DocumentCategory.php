@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DocumentCategory extends Model
 {
     // Table name
-    protected $table = 'category';
+    protected $table = 'document_category';
     // Primary Key
     protected $primaryKey = 'category_id';
 
