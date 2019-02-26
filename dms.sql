@@ -53,7 +53,8 @@ CREATE TABLE `document_category` (
     `category_name` VARCHAR(50) NOT NULL,
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    PRIMARY KEY(`category_id`)
+    PRIMARY KEY(`category_id`),
+    CONSTRAINT `uq_category_name` UNIQUE KEY(`category_name`)
 );
 
 CREATE TABLE `document` (
