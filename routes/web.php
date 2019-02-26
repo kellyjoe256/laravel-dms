@@ -17,6 +17,26 @@ Route::group(['middleware' => ['auth', 'timeout']], function () {
         'as' => 'index', 'uses' => 'DashboardController@index',
     ]);
 
+    // Document Categories
+    Route::get('/document_categories', [
+        'as' => 'doc_categories', 'uses' => 'DocumentCategoriesController@index',
+    ])->middleware('admin');
+    Route::get('/document_categories/add', [
+        'as' => 'doc_categories.add', 'uses' => 'DocumentCategoriesController@create',
+    ])->middleware('admin');
+    Route::post('/document_categories/add', 'DocumentCategoriesController@store')
+        ->middleware('admin');
+    Route::get('/document_categories/{id}/edit', [
+        'as' => 'doc_categories.edit', 'uses' => 'DocumentCategoriesController@edit',
+    ])->middleware('admin');
+    Route::post('/document_categories/{id}/edit', 'DocumentCategoriesController@update')
+        ->middleware('admin');
+    Route::get('/document_categories/{id}/delete', [
+        'as' => 'doc_categories.delete', 'uses' => 'DocumentCategoriesController@delete',
+    ])->middleware('admin');
+    Route::post('/document_categories/{id}/delete', 'DocumentCategoriesController@destroy')
+        ->middleware('admin');
+
     // Branches
     Route::get('/branches', [
         'as' => 'branches', 'uses' => 'BranchesController@index',

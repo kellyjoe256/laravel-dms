@@ -50,13 +50,13 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li {!! set_active('document_categories', 'edit, delete, preview') !!}>
-                                <a href="/document_categories">
+                            <li {!! set_active('document_categories', 'edit, delete') !!}>
+                                <a href="{{ route('doc_categories', [], false) }}">
                                     <i class="fa fa-circle-o"></i> Manage Categories
                                 </a>
                             </li>
                             <li {!! set_active('document_categories/add') !!}>
-                                <a href="/document_categories/add">
+                                <a href="{{ route('doc_categories.add', [], false) }}">
                                     <i class="fa fa-circle-o"></i> 
                                     Add Category
                                 </a>
