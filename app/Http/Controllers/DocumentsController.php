@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class DocumentsController extends Controller
 {
     public function index()
-    {   
+    {
         $branches = [];
         if (is_admin()) {
             $branches = Branch::selectRaw('branch_id, branch_name')
@@ -34,13 +34,13 @@ class DocumentsController extends Controller
 
         if (request('title_desc')) {
             $title_desc = request('title_desc') . '*';
-            $query_builder->whereRaw('MATCH(title, description) AGAINST (? IN BOOLEAN MODE)', [$title_desc,]);
+            $query_builder->whereRaw('MATCH(title, description) AGAINST (? IN BOOLEAN MODE)', [$title_desc]);
         }
 
         if (request('start_date') && request('end_date')) {
             $start_date = request('start_date');
-            $end_date = request('end_date');  
-            $query_builder->whereRaw('creation_date BETWEEN ? AND ?',[
+            $end_date = request('end_date');
+            $query_builder->whereRaw('creation_date BETWEEN ? AND ?', [
                 $start_date, $end_date,
             ]);
         }
@@ -48,29 +48,29 @@ class DocumentsController extends Controller
         // only search amongst branches if you are an admin
         if (request('branch') && is_admin()) {
             $query_builder->whereRaw('document.branch_id = ?', [
-                (int)request('branch'),
+                (int) request('branch'),
             ]);
         } else if (!is_admin()) {
             // if not an admin, only show documents that belong to your branch
             $query_builder->whereRaw('document.branch_id = ?', [
-                (int)auth()->user()->branch_id,
+                (int) auth()->user()->branch_id,
             ]);
         }
 
         // only search among departments if you are an admin
         if (request('department') && is_admin()) {
             $query_builder->whereRaw('document.department_id = ?', [
-                (int)request('department'),
+                (int) request('department'),
             ]);
         } else if (!is_admin()) {
             // if not an admin, only show documents that belong to your
             // department
             $query_builder->whereRaw('document.department_id = ?', [
-                (int)auth()->user()->department_id,
+                (int) auth()->user()->department_id,
             ]);
         }
 
-        $documents =  $query_builder->orderByRaw('creation_date DESC')
+        $documents = $query_builder->orderByRaw('creation_date DESC')
             ->paginate(env('PAGE_SIZE', 10));
 
         $data = [
@@ -84,6 +84,13 @@ class DocumentsController extends Controller
 
     public function create()
     {
+        if (!$this->checkCredentials()) {
+            return redirect()->route('documents')->with([
+                'class' => 'alert-danger',
+                'message' => 'Ask your administrator to assign you a branch and department first',
+            ]);
+        }
+
         $branches = [];
         if (is_admin()) {
             $branches = Branch::selectRaw('branch_id, branch_name')
@@ -162,7 +169,21 @@ class DocumentsController extends Controller
 
     public function edit($document_id)
     {
-        $document = Document::findOrFail((int)$document_id);
+        if (!$this->checkCredentials()) {
+            return redirect()->route('documents')->with([
+                'class' => 'alert-danger',
+                'message' => 'Ask your administrator to assign you a branch and department first',
+            ]);
+        }
+
+        $document = Document::findOrFail((int) $document_id);
+
+        if (!$this->canModify($document->branch_id, $document->department_id)) {
+            return redirect()->route('documents')->with([
+                'class' => 'alert-danger',
+                'message' => 'You don\'t have the neccesary permissions',
+            ]);
+        }
 
         $branches = [];
         if (is_admin()) {
@@ -183,13 +204,13 @@ class DocumentsController extends Controller
             'branches' => $branches,
             'categories' => $categories,
         ];
-    
+
         return view('main/documents/edit', $data);
     }
 
     public function update(EditDocumentRequest $request, $document_id)
     {
-        $document = Document::findOrFail((int)$document_id);
+        $document = Document::findOrFail((int) $document_id);
 
         if ($document->title != $request->title) {
             $this->validate($request, [
@@ -215,13 +236,20 @@ class DocumentsController extends Controller
 
     public function delete($document_id)
     {
-        $document = Document::findOrFail((int)$document_id);
+        $document = Document::findOrFail((int) $document_id);
+
+        if (!$this->canModify($document->branch_id, $document->department_id)) {
+            return redirect()->route('documents')->with([
+                'class' => 'alert-danger',
+                'message' => 'You don\'t have the neccesary permissions',
+            ]);
+        }
 
         $data = [
             'title' => 'Delete Document',
             'document' => $document,
         ];
-    
+
         return view('main/documents/delete', $data);
     }
 
@@ -231,7 +259,7 @@ class DocumentsController extends Controller
             return redirect()->route('documents');
         }
 
-        $document = Document::findOrFail((int)$document_id);
+        $document = Document::findOrFail((int) $document_id);
 
         $flash_message_attributes = [];
         $files_store = $this->getUploadDestination();
@@ -251,7 +279,7 @@ class DocumentsController extends Controller
             $placeholder = replace_character($placeholder, '?, )', '?)');
 
             // delete files reference from the database
-            DocumentFile::whereRaw('file_id IN ' . $placeholder, 
+            DocumentFile::whereRaw('file_id IN ' . $placeholder,
                 array_keys($files))->delete();
 
             // delete the document
@@ -269,7 +297,15 @@ class DocumentsController extends Controller
 
     public function viewFiles($document_id)
     {
-        $document = Document::findOrFail((int)$document_id);
+        $document = Document::findOrFail((int) $document_id);
+
+        if (!$this->canModify($document->branch_id, $document->department_id)) {
+            return redirect()->route('documents')->with([
+                'class' => 'alert-danger',
+                'message' => 'You don\'t have the neccesary permissions',
+            ]);
+        }
+
         $files = $document->files->pluck('filename', 'file_id')->toArray();
 
         $data = [
@@ -277,25 +313,32 @@ class DocumentsController extends Controller
             'document' => $document,
             'files' => $files,
         ];
-    
+
         return view('main/documents/view_files', $data);
     }
 
     public function uploadFiles($document_id)
     {
-        $document = Document::findOrFail((int)$document_id);
+        $document = Document::findOrFail((int) $document_id);
+
+        if (!$this->canModify($document->branch_id, $document->department_id)) {
+            return redirect()->route('documents')->with([
+                'class' => 'alert-danger',
+                'message' => 'You don\'t have the neccesary permissions',
+            ]);
+        }
 
         $data = [
             'title' => 'Upload Files',
             'document' => $document,
         ];
-    
+
         return view('main/documents/upload_files', $data);
     }
 
     public function storeFiles(UploadDocumentFilesRequest $request, $document_id)
     {
-        $document = Document::findOrFail((int)$document_id);
+        $document = Document::findOrFail((int) $document_id);
 
         $uploaded_files = $request->file('files');
         $files = [];
@@ -339,5 +382,41 @@ class DocumentsController extends Controller
         $upload_destination = public_path() . DIRECTORY_SEPARATOR;
         $upload_destination .= 'static/uploads';
         return $upload_destination;
+    }
+
+    /**
+     * Check the credentials of the user that is not an admin
+     * and is able to add, edit or delete a document
+     * 
+     * @return boolean
+     */
+    private function checkCredentials()
+    {
+        $user = auth()->user();
+        if (!is_admin() && !$user->branch_id && !$user->department_id) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if user who is not an admin has belongs to
+     * to the same branch and department as document being edited
+     * 
+     * @param int $doc_branch_id Document branch_id
+     * @param int $doc_department_id Document department_id
+     * @return boolean
+     */
+    private function canModify($doc_branch_id, $doc_department_id)
+    {
+        $user = auth()->user();
+        if (!is_admin() 
+            && !($user->branch_id == $doc_branch_id)
+            && !($user->department_id == $doc_department_id)) {
+            return false;
+        }
+
+        return true;
     }
 }
