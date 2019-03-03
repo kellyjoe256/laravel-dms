@@ -11,8 +11,16 @@ A somewhat simple document management system for an organization or a medium-siz
 1.  Create the database in mysql(**Note**: Make sure you have no database named `dms` in your mysql setup because it will be dropped, alternatively you can rename the database in the file `dms.sql` to something else)
 
     `mysql -u root -p < dms.sql`
+
+2. Within the project root, create folder under the `public` called `static`, then under `static` create a folder called `uploads` after which the structure should look something similar to
+
+    ```
+    public
+        ├── static
+        │   └── uploads
+    ```
 		 
-2. Create admin account by running `php artisan tinker`within the project root and then run the following statements
+3. Create admin account by running `php artisan tinker`within the project root and then run the following statements
     ```
 	>>> $salt = App\Library\Hash::salt()
     >>> $password = App\Library\Hash::make('YOUR_ADMIN_PASSWORD', $salt)
