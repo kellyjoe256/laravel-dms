@@ -76,8 +76,6 @@ CREATE TABLE `document_file` (
     `file_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `filename` VARCHAR(255) NOT NULL,
     `document_id` INT UNSIGNED,
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
     PRIMARY KEY(`file_id`),
     CONSTRAINT `uq_filename` UNIQUE KEY(`filename`)
 );
