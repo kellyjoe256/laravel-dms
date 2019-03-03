@@ -84,10 +84,13 @@ class DocumentsController extends Controller
 
     public function create()
     {
-        $branches = Branch::selectRaw('branch_id, branch_name')
-            ->orderBy('branch_name')
-            ->pluck('branch_name', 'branch_id')
-            ->toArray();
+        $branches = [];
+        if (is_admin()) {
+            $branches = Branch::selectRaw('branch_id, branch_name')
+                ->orderBy('branch_name')
+                ->pluck('branch_name', 'branch_id')
+                ->toArray();
+        }
 
         $categories = Category::selectRaw('category_id, category_name')
             ->orderBy('category_name')
@@ -132,8 +135,13 @@ class DocumentsController extends Controller
         $document->creation_date = $request->creation_date;
         $document->user_id = auth()->user()->user_id;
         $document->category_id = $request->category;
-        $document->branch_id = $request->branch;
-        $document->department_id = $request->department;
+        if (is_admin()) {
+            $document->branch_id = $request->branch;
+            $document->department_id = $request->department;
+        } else {
+            $document->branch_id = auth()->user()->branch_id;
+            $document->department_id = auth()->user()->department_id;
+        }
         $document->save();
 
         $document_files = [];
@@ -156,10 +164,13 @@ class DocumentsController extends Controller
     {
         $document = Document::findOrFail((int)$document_id);
 
-        $branches = Branch::selectRaw('branch_id, branch_name')
-            ->orderBy('branch_name')
-            ->pluck('branch_name', 'branch_id')
-            ->toArray();
+        $branches = [];
+        if (is_admin()) {
+            $branches = Branch::selectRaw('branch_id, branch_name')
+                ->orderBy('branch_name')
+                ->pluck('branch_name', 'branch_id')
+                ->toArray();
+        }
 
         $categories = Category::selectRaw('category_id, category_name')
             ->orderBy('category_name')
@@ -190,8 +201,10 @@ class DocumentsController extends Controller
         $document->description = $request->description;
         $document->creation_date = $request->creation_date;
         $document->category_id = $request->category;
-        $document->branch_id = $request->branch;
-        $document->department_id = $request->department;
+        if (is_admin()) {
+            $document->branch_id = $request->branch;
+            $document->department_id = $request->department;
+        }
         $document->save();
 
         return redirect()->route('documents')->with([
