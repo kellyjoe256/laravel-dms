@@ -2,6 +2,7 @@
 /bootstrap/cache
 /public/hot
 /public/storage
+/public/static/uploads
 /storage/*.key
 /vendor
 /.idea
