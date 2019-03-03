@@ -17,6 +17,38 @@ Route::group(['middleware' => ['auth', 'timeout']], function () {
         'as' => 'index', 'uses' => 'DashboardController@index',
     ]);
 
+    // Documents
+    Route::get('/documents', [
+        'as' => 'documents', 'uses' => 'DocumentsController@index',
+    ]);
+    Route::get('/documents/add', [
+        'as' => 'documents.add', 'uses' => 'DocumentsController@create',
+    ]);
+    Route::post('/documents/add', 'DocumentsController@store');
+    Route::get('/documents/{id}/edit', [
+        'as' => 'documents.edit', 'uses' => 'DocumentsController@edit',
+    ]);
+    Route::post('/documents/{id}/edit', 'DocumentsController@update');
+    Route::get('/documents/{id}/delete', [
+        'as' => 'documents.delete', 'uses' => 'DocumentsController@delete',
+    ]);
+    Route::post('/documents/{id}/delete', 'DocumentsController@destroy');
+    Route::get('/documents/{id}/view_files', [
+        'as' => 'documents.view_files', 'uses' => 'DocumentsController@viewFiles',
+    ]);
+    Route::get('/documents/{id}/upload_files', [
+        'as' => 'documents.upload_files', 'uses' => 'DocumentsController@uploadFiles',
+    ]);
+    Route::post('/documents/{id}/upload_files', 'DocumentsController@storeFiles');
+
+    // Document Files
+    Route::get('/document_files/{id}/preview', [
+        'as' => 'document_files.preview', 'uses' => 'DocumentFilesController@preview',
+    ]);
+    Route::get('/document_files/{id}/delete', [
+        'as' => 'document_files.delete_file', 'uses' => 'DocumentFilesController@deleteFile',
+    ]);
+
     // Document Categories
     Route::get('/document_categories', [
         'as' => 'doc_categories', 'uses' => 'DocumentCategoriesController@index',
