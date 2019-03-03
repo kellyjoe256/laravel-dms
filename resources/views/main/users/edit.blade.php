@@ -94,7 +94,7 @@
                 url: '/branches/' + branch_id + '/get_departments',
                 success: function(data) {
                     var values = data;
-                    var options = '';
+                    var options = '<option value="">Select Department</option>';
                     for (var i = 0; i < values.length; i += 1) {
                         options += '<option value="' + values[i]['id'];
                         options += '" ';
