@@ -9,7 +9,9 @@ A somewhat simple document management system for an organization or a medium-siz
 
 ### To get started
 1.  Create the database in mysql(**Note**: Make sure you have no database named `dms` in your mysql setup because it will be dropped, alternatively you can rename the database in the file `dms.sql` to something else)
-     `mysql -u root -p < dms.sql`
+
+    `mysql -u root -p < dms.sql`
+		 
 2. Create admin account by running `php artisan tinker`within the project root and then run the following statements
     ```
 	>>> $salt = App\Library\Hash::salt()
