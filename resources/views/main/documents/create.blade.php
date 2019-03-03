@@ -77,6 +77,7 @@
                                         </span>
                                     @endif
                                 </div>
+                                @if(is_admin())
                                 <div class="form-group{{ $errors->has('branch') ? ' has-error' : '' }}">
                                     {{ Form::label('branch', 'Branch') }}
                                     {{ Form::select('branch', $branches, null, ['placeholder' => 'Select Branch', 'class' => 'form-control select2', 'id' => 'branch',]) }}
@@ -95,6 +96,7 @@
                                     </span>
                                     @endif
                                 </div>
+                                @endif
                                 <span class="text-danger">* <em>required</em></span>
                             </div>
                             <!-- /.box-body -->
@@ -127,27 +129,29 @@
                 endDate: "+0d",
             });
 
-            // Populate departments dropdown
-            $('#branch').on('change', function(e) {
-                var branch_id = parseInt($(this).val(), 10);
-                if (branch_id) {
-                    $.ajax({
-                        method: "GET",
-                        url: '/branches/' + branch_id + '/get_departments',
-                        success: function(data) {
-                            var values = data;
-                            var options = '<option value="">Select Department</option>';
-                            for (var i = 0; i < values.length; i += 1) {
-                                options += '<option value="' + values[i]['id'];
-                                options += '">' + values[i]['department'];
-                                options += '</option>';
+            <?php if (is_admin()) : ?>
+                // Populate departments dropdown
+                $('#branch').on('change', function(e) {
+                    var branch_id = parseInt($(this).val(), 10);
+                    if (branch_id) {
+                        $.ajax({
+                            method: "GET",
+                            url: '/branches/' + branch_id + '/get_departments',
+                            success: function(data) {
+                                var values = data;
+                                var options = '<option value="">Select Department</option>';
+                                for (var i = 0; i < values.length; i += 1) {
+                                    options += '<option value="' + values[i]['id'];
+                                    options += '">' + values[i]['department'];
+                                    options += '</option>';
+                                }
+                                $('#department').html(options);
                             }
-                            $('#department').html(options);
-                        }
-                    });
-                } else {
-                    $('#department').html('<option value="">Select Branch First</option>');
-                }
-            });
+                        });
+                    } else {
+                        $('#department').html('<option value="">Select Branch First</option>');
+                    }
+                });
+            <?php endif; ?>
         </script>
 @stop

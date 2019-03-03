@@ -61,6 +61,7 @@
                                         </span>
                                     @endif
                                 </div>
+                                @if(is_admin())
                                 <div class="form-group{{ $errors->has('branch') ? ' has-error' : '' }}">
                                     {{ Form::label('branch', 'Branch') }}
                                     {{ Form::select('branch', $branches, $document->branch_id, ['placeholder' => 'Select Branch', 'class' => 'form-control select2', 'id' => 'branch',]) }}
@@ -79,6 +80,7 @@
                                     </span>
                                     @endif
                                 </div>
+                                @endif
                                 <span class="text-danger">* <em>required</em></span>
                             </div>
                             <!-- /.box-body -->
@@ -111,48 +113,50 @@
                 endDate: "+0d",
             });
 
-            // Populate departments dropdown
-            function getDepartments(branch_id) {
-                $.ajax({
-                    method: "GET",
-                    url: '/branches/' + branch_id + '/get_departments',
-                    success: function(data) {
-                        var values = data;
-                        var options = '<option value="">Select Department</option>';
-                        for (var i = 0; i < values.length; i += 1) {
-                            options += '<option value="' + values[i]['id'];
-                            options += '" ';
-                            // If the branch selected is equal to user's branch
-                            // and the one of department ids matches the user's 
-                            // department then selected attribute is set
-                            if (
-                                branch_id === <?php 
-                                    echo (int)$document->branch_id
-                                ?>
-                                && values[i]['id'] === <?php 
-                                    echo (int)$document->department_id
-                                ?>
-                            ) {
-                                options += 'selected="selected"';
+            <?php if (is_admin()) : ?>
+                // Populate departments dropdown
+                function getDepartments(branch_id) {
+                    $.ajax({
+                        method: "GET",
+                        url: '/branches/' + branch_id + '/get_departments',
+                        success: function(data) {
+                            var values = data;
+                            var options = '<option value="">Select Department</option>';
+                            for (var i = 0; i < values.length; i += 1) {
+                                options += '<option value="' + values[i]['id'];
+                                options += '" ';
+                                // If the branch selected is equal to user's branch
+                                // and the one of department ids matches the user's 
+                                // department then selected attribute is set
+                                if (
+                                    branch_id === <?php 
+                                        echo (int)$document->branch_id
+                                    ?>
+                                    && values[i]['id'] === <?php 
+                                        echo (int)$document->department_id
+                                    ?>
+                                ) {
+                                    options += 'selected="selected"';
+                                }
+                                options += '>' + values[i]['department'];
+                                options += '</option>';
                             }
-                            options += '>' + values[i]['department'];
-                            options += '</option>';
+                            $('#department').html(options);
                         }
-                        $('#department').html(options);
+                    });
+                }
+
+                var current_branch = parseInt($('#branch').val(), 10);
+                if (current_branch) { getDepartments(current_branch); }
+
+                $('#branch').on('change', function(e) {
+                    var branch_id = parseInt($(this).val(), 10);
+                    if (branch_id) {
+                        getDepartments(branch_id);
+                    } else {
+                        $('#department').html('<option value="">Select Branch First</option>');
                     }
                 });
-            }
-
-            var current_branch = parseInt($('#branch').val(), 10);
-            if (current_branch) { getDepartments(current_branch); }
-
-            $('#branch').on('change', function(e) {
-                var branch_id = parseInt($(this).val(), 10);
-                if (branch_id) {
-                    getDepartments(branch_id);
-                } else {
-                    $('#department').html('<option value="">Select Branch First</option>');
-                }
-            });
+            <?php endif; ?>
         </script>
 @stop
