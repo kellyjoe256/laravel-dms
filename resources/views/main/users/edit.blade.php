@@ -103,10 +103,9 @@
                         // department then selected attribute is set
                         if (
                             branch_id === <?php 
-                                echo (int)$user->branch_id
-                            ?>
-                            && values[i]['id'] === <?php 
-                                echo (int)$user->department_id
+                                echo (int)$user->branch_id;
+                            ?> && values[i]['id'] === <?php 
+                                echo (int)$user->department_id;
                             ?>
                         ) {
                             options += 'selected="selected"';

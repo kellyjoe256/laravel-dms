@@ -54,16 +54,9 @@
                                     @else
                                         <a href="{{ route('users.activate', [$user->user_id], false) }}" title="Activate Account" class="text-info u">Activate</a>
                                     @endif
-                                    {!! Html::nbsp(3) !!}
-                                    {{-- <a href="{{ route('branches.delete', [$branch->branch_id], false) }}" title="Delete Branch" class="text-danger u">Delete</a>
-                                    {!! Html::nbsp(3) !!}
-                                    <a href="{{ route('branches.departments', [$branch->branch_id], false) }}" title="View Departments" class="text-info u">View Departments</a>
-                                    {!! Html::nbsp(3) !!}
-                                    <a href="{{ route('branches.add_departments', [$branch->branch_id], false) }}" title="Add Departments" class="text-info u">Add Departments</a> --}}
                                 </td>
                             </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>

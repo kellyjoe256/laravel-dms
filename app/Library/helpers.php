@@ -129,7 +129,7 @@ function format_query_string($query_string)
     $query_string_parts = explode(' ', $query_string);
     $parts_length = count($query_string_parts);
     for ($i = 0; $i < $parts_length; $i += 1) {
-        if ((bool)$query_string_parts[$i]
+        if ((bool) $query_string_parts[$i]
             && strlen($query_string_parts[$i]) < 4) {
             $query_string_parts[$i] = str_pad(
                 $query_string_parts[$i], 4, '*'
@@ -151,7 +151,8 @@ function is_admin()
 
 /**
  * Sets the appropriate headers and downloads the file
- * @param string $file File to download
+ * 
+ * @param string $file file to download
  * @param string $path_to_file Default './' Path to file file for download
  * @param string $name Name that user will receive the file as while downloading
  * @return string
@@ -163,7 +164,7 @@ function download_file($file, $path_to_file = './', $name = 'file')
 
     $full_path_to_file = '';
     if (substr($path_to_file, -1) != '/') {
-        $full_path_to_file = $path_to_file . '/' . $file;
+        $full_path_to_file = $path_to_file . DIRECTORY_SEPARATOR . $file;
     } else {
         $full_path_to_file = $path_to_file . $file;
     }
@@ -193,6 +194,56 @@ function download_file($file, $path_to_file = './', $name = 'file')
 }
 
 /**
+ * Sets the appropriate headers and previews the file
+ * 
+ * @param string $file file to preview
+ * @param string $path_to_file Default './' Path to file file for download
+ * @param string $name Name that user will receive the file as while downloading
+ * @return string
+ */
+function preview_file($file, $path_to_file = './', $name = 'file')
+{
+    $file_parts = explode('.', $file);
+    $file_extension = $file_parts[1];
+
+    $full_path_to_file = '';
+    if (substr($path_to_file, -1) != '/') {
+        $full_path_to_file = $path_to_file . DIRECTORY_SEPARATOR . $file;
+    } else {
+        $full_path_to_file = $path_to_file . $file;
+    }
+
+    $content_type = '';
+    switch (strtolower($file_extension)) {
+        case 'pdf':
+            $content_type = 'application/pdf';
+            break;
+        case 'png':
+            $content_type = 'image/png';
+            break;
+        case 'jpeg':
+        case 'jpg':
+            $content_type = 'image/jpeg';
+            break;
+        case 'gif':
+            $content_type = 'image/gif';
+            break;
+    }
+
+    $send_name = $name . '.' . $file_extension;
+
+    header('Content-Type: ' . $content_type);
+    header('Content-Disposition: inline; filename=' . $send_name . '');
+    header('Content-Length: ' . filesize($full_path_to_file));
+    header('Content-Transfer-Encoding: binary');
+    header('Accept-Ranges: bytes');
+    ob_clean();
+    flush();
+    readfile($full_path_to_file);
+    exit();
+}
+
+/**
  * Returns the breadcrumbs for each page without the last one
  * @return array
  */
@@ -207,7 +258,7 @@ function get_breadcrumbs()
     foreach ($segments as $index => $segment) {
         // Ignore numbers, because they may indicate ids of an Entity
         // being edited, deleted or otherwise
-        if (is_numeric($segment)) { continue; }
+        if (is_numeric($segment)) {continue;}
         $link = implode('/', array_slice($segments, 0, $index + 1));
         // Add forward slash at the beginning of the link
         $link = substr_replace($link, '/', 0, 0);
@@ -234,7 +285,7 @@ function get_string_brief($string, $length = 150, $append_chars = '...')
         $brief = rtrim($brief, '.');
     }
 
-	$brief .= ' ' . $append_chars;
+    $brief .= ' ' . $append_chars;
 
     return $brief;
 }
@@ -252,7 +303,7 @@ function upload_file(\Illuminate\Http\UploadedFile $upload, $destination, $name 
     $filename_with_ext = $upload->getClientOriginalName();
     $filename = pathinfo($filename_with_ext, PATHINFO_FILENAME);
     $extension = $upload->getClientOriginalExtension();
-    if ((bool)$name) {
+    if ((bool) $name) {
         $filename_to_store = $name . '_' . time();
     } else {
         $filename_to_store = $filename . '_' . time();
@@ -265,12 +316,12 @@ function upload_file(\Illuminate\Http\UploadedFile $upload, $destination, $name 
         $uploaded = false;
     }
 
-    return [(bool)$uploaded, $filename_to_store];
+    return [(bool) $uploaded, $filename_to_store];
 }
 
 /**
  * Modify a date or time
- * 
+ *
  * @param string $date_string date/datetime string to modify
  * @param string $modification_string string to modify the date/datetime
  * @return \DateTime
@@ -279,4 +330,23 @@ function modify_date($date_string, $modification_string)
 {
     $date = new \DateTime($date_string);
     return $date->modify($modification_string);
+}
+
+/**
+ * Check whether the values of a one-dimensional array contain a specific value
+ *
+ * @param array $arr array to be checked
+ * @param mixed value to check for
+ * @return boolean
+ */
+function check_array_values(array $arr, $value)
+{
+    $out = false;
+
+    $combined_string_of_values = implode('/', $arr);
+    if (strpos($combined_string_of_values, '' . $value, 0) !== false) {
+        $out = true;
+    }
+
+    return $out;
 }

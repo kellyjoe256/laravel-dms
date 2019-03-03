@@ -18,5 +18,5 @@
 
     @endforeach
     
-    <li class="active">{{ $title }}</li>
+    <li class="active">{{ strip_tags($title) }}</li>
 </ol>

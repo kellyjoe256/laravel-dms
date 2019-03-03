@@ -28,13 +28,13 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li {!! set_active('documents', 'edit,delete, preview') !!}>
-                                <a href="/documents">
+                            <li {!! set_active('documents', 'edit,delete, view_files') !!}>
+                                <a href="{{ route('documents', [], false) }}">
                                     <i class="fa fa-circle-o"></i> Manage Documents
                                 </a>
                             </li>
                             <li {!! set_active('documents/add') !!}>
-                                <a href="/documents/add">
+                                <a href="{{ route('documents.add', [], false) }}">
                                     <i class="fa fa-circle-o"></i> Add Document
                                 </a>
                             </li>

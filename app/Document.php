@@ -10,6 +10,8 @@ class Document extends Model
     protected $table = 'document';
     // Primary Key
     protected $primaryKey = 'document_id';
+    // Dates
+    protected $dates = ['creation_date',];
 
     public function category()
     {
