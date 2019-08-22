@@ -278,9 +278,13 @@ class DocumentsController extends Controller
             $placeholder .= ')';
             $placeholder = replace_character($placeholder, '?, )', '?)');
 
-            // delete files reference from the database
-            DocumentFile::whereRaw('file_id IN ' . $placeholder,
-                array_keys($files))->delete();
+            if ($placeholder != '(') {
+                // delete files reference from the database
+                DocumentFile::whereRaw(
+                    'file_id IN ' . $placeholder,
+                    array_keys($files)
+                )->delete();
+            }
 
             // delete the document
             $document->delete();
@@ -411,9 +415,10 @@ class DocumentsController extends Controller
     private function canModify($doc_branch_id, $doc_department_id)
     {
         $user = auth()->user();
-        if (!is_admin() 
+        if (!is_admin()
             && !($user->branch_id == $doc_branch_id)
-            && !($user->department_id == $doc_department_id)) {
+            && !($user->department_id == $doc_department_id)
+        ) {
             return false;
         }
 
